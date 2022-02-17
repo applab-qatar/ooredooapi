@@ -16,7 +16,7 @@ class SendSMSRequest {
 
     public function __construct($arabic = false) {
         if($arabic) {
-            $this->messageType = "ArabicWithArabicNumbers";
+            $this->messageType = "ArabicWithLatinNumbers";
         }
     }
 }
