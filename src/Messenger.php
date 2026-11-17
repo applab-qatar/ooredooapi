@@ -14,6 +14,8 @@ use SoapFault;
 class Messenger {
     private $soapUser = null;
     private $originator;
+    private $protocol;
+    private $http;
 
     /**
      * Messenger constructor.
@@ -23,10 +25,14 @@ class Messenger {
      * @param        $password
      * @param        $originator
      * @param string $language
+     * @param string $protocol 'soap11' (default, as before) | 'soap12' | 'post' | 'get'
+     * @param \GuzzleHttp\Client|null $http Guzzle client for post/get (pass one to mock in tests)
      */
-    public function __construct($customerID, $name, $password, $originator, $language = 'en') {
+    public function __construct($customerID, $name, $password, $originator, $language = 'en', $protocol = 'soap11', $http = null) {
         $this->soapUser   = new SoapUser($customerID, $name, $password, $language);
         $this->originator = $originator;
+        $this->protocol   = $protocol;
+        $this->http       = $http;
     }
 
     /**
@@ -40,13 +46,13 @@ class Messenger {
      */
     public function sendSMS($smsText, $recipientPhone, $deliveryTime = null, $arabic = false) {
         try {
-            $message                        = new Message($this->soapUser);
+            $message                        = new Message($this->soapUser, $this->http);
             $sendSmsRequest                 = new SendSMSRequest($arabic);
             $sendSmsRequest->smsText        = $smsText;
             $sendSmsRequest->originator     = $this->originator;
             $sendSmsRequest->recipientPhone = $recipientPhone;
             $sendSmsRequest->defDate        = $deliveryTime;
-            return $message->sendSms($sendSmsRequest);
+            return $message->sendSms($sendSmsRequest, $this->protocol);
         } catch(Exception $exception) {
             throw $exception;
         }
@@ -61,9 +67,10 @@ class Messenger {
      */
     public function getSMSStatus($transactionID, $detailed = true) {
         try {
-            $message             = new Message($this->soapUser);
+            $message             = new Message($this->soapUser, $this->http);
             $getSmsStatusRequest = new GetSmsStatusRequest($transactionID);
-            return $message->getSmsStatus($getSmsStatusRequest);
+            $getSmsStatusRequest->detailed = $detailed;
+            return $message->getSmsStatus($getSmsStatusRequest, $this->protocol);
         } catch(Exception $exception) {
             throw $exception;
         }

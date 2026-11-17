@@ -35,4 +35,9 @@ class GetSmsStatusResponse {
     public function __get($name) {
         return $this->GetSmsStatusResult->{$name};
     }
+
+    /** Lets isset()/empty()/?? see the result fields that __get exposes. */
+    public function __isset($name) {
+        return isset($this->GetSmsStatusResult->{$name});
+    }
 }

@@ -13,4 +13,9 @@ class SendSMSResponse {
     public function __get($name) {
         return $this->SendSmsResult->{$name};
     }
+
+    /** Lets isset()/empty()/?? see the result fields that __get exposes. */
+    public function __isset($name) {
+        return isset($this->SendSmsResult->{$name});
+    }
 }
