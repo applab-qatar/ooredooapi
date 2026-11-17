@@ -9,7 +9,8 @@ use SoapFault;
 
 class Client extends SoapClient {
     private $wsdl    = "https://messaging.ooredoo.qa/bms/soap/Messenger.asmx?wsdl";
-    private $options = ['trace' => true, 'exceptions' => true];
+    // The WSDL advertises http://, but Ooredoo only accepts HTTPS (port 80 is refused), so override the endpoint.
+    private $options = ['trace' => true, 'exceptions' => true, 'location' => 'https://messaging.ooredoo.qa/bms/Soap/Messenger.asmx'];
 
     /**
      * Client constructor.
