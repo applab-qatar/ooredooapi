@@ -1,3 +1,7 @@
+<p align="center"><a href="https://applab.qa" target="_blank"><img src="https://applab.qa/wp-content/uploads/2020/11/page-logo.svg" width="400"></a></p>
+
+<p align="center"></p>
+
 # ooredooapi
 PHP package for sending SMS through the Ooredoo Qatar Messenger web service (`messaging.ooredoo.qa`).
 
